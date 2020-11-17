@@ -2,10 +2,12 @@
 //import './App.css';
 //import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import React from 'react';
-import {connect} from 'react-redux';
+//import {connect} from 'react-redux';
 //import {login} from '../redux/loginAction';
 //import {login} from '../redux';
-import {register} from '../redux';
+//import {register} from '../redux';
+import fire from '../config/fire';
+import Home from './Home';
 
 class Login extends React.Component {
   constructor()
@@ -14,42 +16,19 @@ class Login extends React.Component {
         this.state = {
             email:"",
             password:"",
-            email_array:[],
-            password_array:[],
+            //email_array:[],
+            //password_array:[],
             emailError:"",
             passwordError:"",
-            searchuname:"",
+            //searchuname:"",
             login:false
         }
     }
-
-    componentWillMount(){
-    
-        this.setState({
-            //email_array :localStorage.getItem('email') ? JSON.parse(localStorage.getItem('email')) : [],
-            //password_array :localStorage.getItem('password') ? JSON.parse(localStorage.getItem('password')) : [],
-             
-        })
-    
-     }
-    
 
     valid() {
         if(this.state.email.length===0){
             this.setState( { emailError:"Email is required to fill" })
         }
-        /*else if(this.state.email.indexOf("@")<1 || this.state.email.lastIndexOf(".")<this.state.email.indexOf("@")+2 || this.state.email.lastIndexOf(".")+2>=this.state.email.length){
-            this.setState({ emailError:"Please enter a valid e-mail address !"})
-        }
-        else if(this.state.contactnumber.length===0){
-            this.setState( { contactnumberError:"Mobie number is required to fill" })
-        }
-        else if(this.state.contactnumber.length!==0 && this.state.contactnumber.length!==10){
-            this.setState( { contactnumberError:"Mobie number should be 10 digit number !" })
-        }
-        else if(isNaN(this.state.contactnumber)){
-            this.setState( { contactnumberError:"Enter your valid mobile number !" })
-        }*/
         else if(this.state.password.length===0){
             this.setState( { passwordError:"Password is required to fill" })
         }
@@ -69,29 +48,19 @@ class Login extends React.Component {
         if(this.valid())
         {
             
-            //console.log(this.props.email);
-            //console.log(this.state.email_array);
-            //console.log(this.state.email_array[0]);
-            //console.log(this.state.email_array.indexOf(this.state.email));
-            //this.props.onLogin(this.state.email, this.state.password);
-            //this.a=this.state.email_array.indexOf(this.state.email);
-            //this.b=this.state.password_array.indexOf(this.state.password)
-            this.a=this.props.email.indexOf(this.state.email);
-            this.b=this.props.password.indexOf(this.state.password)
-            if(this.a===-1){
-                alert("emailID doesn't exist");
-            }
-            else if(this.a!==this.b){
-                alert("email or password is wrong")
-            }
-            else{
-                this.setState ({
-                  login:true
-                })
-                alert("Login Successfull");
+            fire.auth().signInWithEmailAndPassword(this.state.email,this.state.password).then((u)=>{
+                  console.log(u);
+                  this.setState ({
+                    login:true
+                  })
+                  
+                  
+              }).catch((err)=>{
+                   console.log(err);
+                   alert("Something went wrong");
+              });
+                
 
-                //alert(this.props.email)
-            }
         }
       
         
@@ -125,21 +94,11 @@ class Login extends React.Component {
             </div>
           </div>
 
-          <div className="form-group row">
-            <div className="col-sm-10">
-              <input type="text" className="form-control" placeholder="Search user" onChange = {(event) => { this.setState({ searchuname:event.target.value })}}/> 
-              {this.state.login && this.props.email.indexOf(this.state.searchuname)!==-1 ? <small className="text-danger" >User found{this.state.login}</small> : ''}           
-            </div>
-          </div>
+          
 
           {this.state.login ? 
             <div>
-              <h2>Registered Users are</h2>
-            {this.props.email.map(email => (
-              <li>
-                {email}
-              </li>
-            ))}
+              <Home/>
           </div>
           : ''}
 
@@ -150,21 +109,6 @@ class Login extends React.Component {
 
 
 
-const mapStateToProps = states => {
-  return { 
-    //isLoggedIn: states.isLoggedIn,
-    //access_token: states.access_token, 
-    email:states.email,
-    password:states.password,
-    name:states.name
-  }
-}
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onRegister: (name ,gender ,email , password) => { dispatch(register(name ,gender ,email , password)); },
-    //tokenStore: (accessToken) => { dispatch(storeTokens(accessToken)) },
-  }
-}
-export default connect(mapStateToProps,mapDispatchToProps)(Login);
+export default Login;
 

@@ -2,40 +2,40 @@
 //import './App.css';
 //import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import React from 'react';
-import {connect} from 'react-redux';
+//import {connect} from 'react-redux';
 //import {login} from '../redux';
-import {register} from '../redux';
+//import {register} from '../redux';
+import fire from '../config/fire';
+//import createBrowserHistory from 'history lib createBrowserHistory';
+
+//const history = createBrowserHistory({forceRefresh:true});
 
 class Register extends React.Component {
   constructor()
     {
         super();
         this.state = {
-            C:false,
-            Java:false,
-            Python:false,
-            JavaScript:false,
             name:"",
             gender:"",
             email:"",
             category:"",
             password:"",
             cpassword:"",
-            technology:[],
-            contactnumber:"",
-            baseImage:"",
-            modalIsOpen:false,
+            //technology:[],
+            //contactnumber:"",
+            //baseImage:"",
+            //modalIsOpen:false,
             
             nameError:"",
             emailError:"",
             genderError:"",
             contactnumberError:"",
             categoryError:"",
-            technologyError:"",
-            baseImageError:"",
+            //technologyError:"",
+            //baseImageError:"",
             passwordError:"",
             cpasswordError:"",
-            _id: ''
+            // _id: ''
         }
     }
 
@@ -52,18 +52,6 @@ class Register extends React.Component {
         else if(this.state.email.length===0){
             this.setState( { emailError:"Email is required to fill" })
         }
-        /*else if(this.state.email.indexOf("@")<1 || this.state.email.lastIndexOf(".")<this.state.email.indexOf("@")+2 || this.state.email.lastIndexOf(".")+2>=this.state.email.length){
-            this.setState({ emailError:"Please enter a valid e-mail address !"})
-        }
-        else if(this.state.contactnumber.length===0){
-            this.setState( { contactnumberError:"Mobie number is required to fill" })
-        }
-        else if(this.state.contactnumber.length!==0 && this.state.contactnumber.length!==10){
-            this.setState( { contactnumberError:"Mobie number should be 10 digit number !" })
-        }
-        else if(isNaN(this.state.contactnumber)){
-            this.setState( { contactnumberError:"Enter your valid mobile number !" })
-        }*/
         else if(this.state.gender.length===0){
             this.setState( { genderError:"Gender is required to fill" })
         }
@@ -104,29 +92,15 @@ class Register extends React.Component {
         })
         if(this.valid())
         {
-            //this.setState ({
-                //modalIsOpen:true,
-                //technology : Array.from(new Set(this.state.technology))
-
-            //})
-            this.name_array.push(this.state.name);  
-            this.gender_array.push(this.state.gender);
-            this.email_array.push(this.state.email);  
-            //this.mobile_array.push(this.state.contactnumber);  
-            //this.category_array.push(this.state.category); 
-            //this.pic_array.push(this.state.baseImage); 
-            this.password_array.push(this.state.password); 
-
-            localStorage.setItem("name", JSON.stringify(this.name_array));
-            localStorage.setItem("gender", JSON.stringify(this.gender_array));
-            localStorage.setItem("email", JSON.stringify(this.email_array));
-            localStorage.setItem("password", JSON.stringify(this.password_array));
-            //localStorage.setItem("mobile", JSON.stringify(this.mobile_array));
-            //localStorage.setItem("category", JSON.stringify(this.category_array));
-            //localStorage.setItem("technology", JSON.stringify(this.technology_array));
-            //localStorage.setItem("pic", JSON.stringify(this.pic_array));
-            this.props.onRegister(this.state.name, this.state.gender, this.state.email, this.state.password);
-            alert("Registration done");
+            
+              fire.auth().createUserWithEmailAndPassword(this.state.email,this.state.password).then((u)=>{
+                console.log(u);
+                alert("Registration done");
+                //history.push("/user/home");
+            }).catch((err)=>{
+                console.log(err)
+            });
+            //alert("Registration done");
         }
       
         
@@ -191,19 +165,5 @@ class Register extends React.Component {
 }
 
 
-const mapStateToProps = states => {
-  return { 
-    //isLoggedIn: states.isLoggedIn,
-    //access_token: states.access_token, 
-    email:states.email[0],
 
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onRegister: (name ,gender ,email , password) => { dispatch(register(name ,gender ,email , password)); },
-    //tokenStore: (accessToken) => { dispatch(storeTokens(accessToken)) },
-  }
-}
-export default connect(mapStateToProps,mapDispatchToProps)(Register);
+export default Register;
