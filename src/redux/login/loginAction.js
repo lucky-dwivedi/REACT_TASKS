@@ -15,6 +15,6 @@ export const login = (email, password) => {
   export const storeTokens = () => {
     return {
       type: 'STORE_TOKENS',
-      access_token: accessToken,
+      //access_token: accessToken,
     }
   }

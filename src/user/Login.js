@@ -18,6 +18,7 @@ class Login extends React.Component {
             password_array:[],
             emailError:"",
             passwordError:"",
+            searchuname:"",
             login:false
         }
     }
@@ -76,7 +77,7 @@ class Login extends React.Component {
             //this.a=this.state.email_array.indexOf(this.state.email);
             //this.b=this.state.password_array.indexOf(this.state.password)
             this.a=this.props.email.indexOf(this.state.email);
-            this.b=this.props.email.indexOf(this.state.password)
+            this.b=this.props.password.indexOf(this.state.password)
             if(this.a===-1){
                 alert("emailID doesn't exist");
             }
@@ -124,6 +125,13 @@ class Login extends React.Component {
             </div>
           </div>
 
+          <div className="form-group row">
+            <div className="col-sm-10">
+              <input type="text" className="form-control" placeholder="Search user" onChange = {(event) => { this.setState({ searchuname:event.target.value })}}/> 
+              {this.state.login && this.props.email.indexOf(this.state.searchuname)!==-1 ? <small className="text-danger" >User found{this.state.login}</small> : ''}           
+            </div>
+          </div>
+
           {this.state.login ? 
             <div>
               <h2>Registered Users are</h2>
@@ -134,6 +142,8 @@ class Login extends React.Component {
             ))}
           </div>
           : ''}
+
+          
     </>
   )}
 }
@@ -146,7 +156,7 @@ const mapStateToProps = states => {
     //access_token: states.access_token, 
     email:states.email,
     password:states.password,
-
+    name:states.name
   }
 }
 
